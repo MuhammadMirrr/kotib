@@ -48,3 +48,7 @@ Toʻliq: [Maxfiylik siyosati](PRIVACY.md) · [uzb.mirqobilov.com/maxfiylik](http
 ---
 
 <p align="center"><sub>Kotib mustaqil loyiha. Apple, Microsoft yoki boshqa kompaniya bilan aloqasi yoʻq.</sub></p>
+
+## 👤 Muallif
+
+**Muhammad Mirqobilov** (pasportda Mirkabilov) — [mirqobilov.com/about](https://mirqobilov.com/about) · Telegram [@mirqobilov_mm](https://t.me/mirqobilov_mm) · kanal [@mirqobilov_dev](https://t.me/mirqobilov_dev)
