@@ -122,7 +122,8 @@ ushlaydi; `--reliz` bilan esa eski qolgan joylarni ham koʻrsatadi.
 
 ## Statistikani koʻrish
 
-Brauzerda: `https://stat.mirqobilov.com/panel?kalit=<kalit>`
+Brauzerda: `https://stat.mirqobilov.com/panel` — login oynasida foydalanuvchi nomi
+istalgan, **parol** — `PANEL_KALIT` (kalit URL'da qabul qilinmaydi).
 
 Sahifa `src/panel.js` da tayyorlanadi. Besh boʻlim: **Umumiy holat** (kartalar
 va 30 kunlik grafiklar), **Joylashuv** (mamlakat bayrogʻi + oʻzbekcha nomi,
