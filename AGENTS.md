@@ -357,6 +357,26 @@ works from SSH and keeps the recording for measuring on the Mac. A WAV dropped i
 same `matnniTayyorla` as a dictation. The clipboard is per session: read it by pasting in
 the desktop, not with `Get-Clipboard` over SSH.
 
+Typing long text with `vnc.py yoz` is fragile: during the 2026-10-08 bridge test the guest's
+Caps Lock ended up **on** mid-sentence (QEMU syncs letter case against its own idea of the
+lock state), so everything after it came out in inverted case, and a stray Space in an
+unfocused page scrolls it, so later clicks land in the wrong field. For form text, put it on the
+desktop session's clipboard instead — a `schtasks … /rl LIMITED /it` task running
+`powershell -Command Get-Content -Raw -Encoding UTF8 <file> | Set-Clipboard` — then click
+the field and send `ctrl+a delete ctrl+v`. Caps Lock is keysym `0xFFE5` (not in
+`TUGMALAR`; send it with `Vnc().tugmaBos(0xFFE5)`). Also: a form that adds a field when a
+radio is picked shifts everything below it, so take a fresh screenshot before clicking.
+
+**The Windows installers are not Authenticode-signed** (`Get-AuthenticodeSignature` →
+`NotSigned`). A user who downloads one with Edge gets two SmartScreen stops: «…isn't
+commonly downloaded» in the download list (right-click → Keep → Keep anyway) and «Windows
+protected your PC» on launch (More info → Run anyway). Every release is a new file hash
+with no reputation, so the first downloaders of each one see it. Updates the 1.2+ updater
+fetches with WinHTTP carry no Mark of the Web, so they don't trigger either warning. This
+matters only for browser downloads: new installs and the 1.1.0 bridge. A «report as safe»
+for `Kotib-1.2.1-win-setup.exe` went to Microsoft on 2026-10-08. The only lasting fix is code
+signing (`win/README.md` documents the clicks for users).
+
 If the pointer stops responding entirely (keyboard still works, guest devices
 still show as *Started*), the fault is QEMU's input state: **rebooting the guest
 does not fix it — the VM has to be stopped and started**, so that a new QEMU

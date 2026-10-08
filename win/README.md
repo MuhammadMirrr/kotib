@@ -45,9 +45,16 @@ tarjimondan foydalanmaydiganlar ham 4 GB yuklab olishga majbur boʻlardi.
 
 ### SmartScreen ogohlantirishi
 
-Ilova hozircha kod imzosi sertifikati bilan imzolanmagan, shuning uchun Windows
-"Windows protected your PC" deb ogohlantirishi mumkin. Bir martalik yechim:
-**"Batafsil maʼlumot" (More info) → "Baribir ishga tushirish" (Run anyway)**.
+Ilova hozircha kod imzosi sertifikati bilan imzolanmagan, shuning uchun ikki joyda
+ogohlantirish chiqishi mumkin:
+
+1. **Edge yuklashda:** "…isn't commonly downloaded" — yuklashlar roʻyxatida faylni
+   sichqonchaning oʻng tugmasi bilan bosing → **Keep** → **Keep anyway**.
+2. **Ochishda:** "Windows protected your PC" — **"Batafsil maʼlumot" (More info) →
+   "Baribir ishga tushirish" (Run anyway)**.
+
+Bu faqat oʻrnatuvchini brauzerdan yuklaganda boʻladi. 1.2 dan keyingi yangilanishlarni
+Kotib oʻzi yuklaydi va oʻrnatadi — ularda bu ogohlantirishlar chiqmaydi.
 
 ## Ishlatish
 
