@@ -884,7 +884,12 @@ Offline translation between the model's **202 languages**, any direction. Third 
 - **An open sheet or modal window cancels the install.** Sparkle's immediate install
   sends a quit Apple event; AppKit answers «App termination blocked by modal sheet» and
   Sparkle does not retry — the forced-update banner sat on «yuklanmoqda…» forever (S9
-  test). `Yangilovchi.modalOchiq` counts an attached sheet or `NSApp.modalWindow` as busy.
+  test). `Yangilovchi.modalOchiq` counts an attached sheet or `NSApp.modalWindow` as busy. The
+  **user-initiated** path (Settings → «Hozir tekshirish» → «Oʻrnatish», or the banner's
+  «Hozir oʻrnatish») hit the same wall in 1.2.1 with the Settings sheet itself open: there
+  `Yangilovchi.ochiqOynalarniYop()` ends sheets/modals first, and `showInstallingUpdate`
+  uses Sparkle's `retryTerminatingApplication` when the app did not quit. The background
+  path still waits instead of closing the user's windows.
 - **Why int8**: CTranslate2 supports only `float32`, `int8` and `int8_float32` on the
   CPU — `float16`/`bfloat16` are GPU-only and `int16` does not exist on ARM. For 3.3B
   that is 13.4 GB versus 3.36 GB, and int8 is faster. It runs **on the CPU only** — no

@@ -294,12 +294,12 @@ final class Yangilovchi: NSObject, SPUUpdaterDelegate {
     /// ketayotgan boʻlsa — kutadi: ovoz yoʻqolmasin.
     private func hozirOrnat() {
         guard let blok = ornatishBloki else { return }
-        if DiktovkaBand.faol || modalOchiq {
-            (NSApp.delegate as? AppDelegate)?.overlay.vaqtincha(
-                DiktovkaBand.faol ? "Diktovka tugagach oʻrnatiladi" : "Ochiq oynani yoping — keyin oʻrnatiladi",
-                soniya: 3)
+        if DiktovkaBand.faol {
+            (NSApp.delegate as? AppDelegate)?.overlay.vaqtincha("Diktovka tugagach oʻrnatiladi", soniya: 3)
             return
         }
+        // Foydalanuvchi oʻzi soʻradi — ochiq sheet/modal oyna yopilishni bekor qilmasin.
+        Yangilovchi.ochiqOynalarniYop()
         ornatishBloki = nil
         kutishBoshlandi = nil
         boshPaytTaymer?.invalidate()
@@ -381,6 +381,15 @@ final class Yangilovchi: NSObject, SPUUpdaterDelegate {
     /// modal sheet» bilan rad etiladi va oʻrnatish qayta urinilmaydi — majburiy
     /// banner abadiy «yuklanmoqda…» da qolardi (S9 sinovi, 2026-10-08).
     /// Shuning uchun oʻrnatish ular yopilguncha kutadi.
+    /// Ochiq sheet va modal oynalarni yopadi — FAQAT foydalanuvchi oʻrnatishni
+    /// oʻzi soʻraganda (fon yoʻli ularni kutadi, odamning ishiga tegmaydi).
+    static func ochiqOynalarniYop() {
+        if NSApp.modalWindow != nil { NSApp.abortModal() }
+        for w in NSApp.windows {
+            if let sheet = w.attachedSheet { w.endSheet(sheet) }
+        }
+    }
+
     private var modalOchiq: Bool {
         NSApp.modalWindow != nil || NSApp.windows.contains { $0.attachedSheet != nil }
     }

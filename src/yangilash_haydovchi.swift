@@ -279,6 +279,7 @@ final class YangilashHaydovchi: NSObject, SPUUserDriver {
                             asosiy: ("OK", { [weak self] in self?.yop() }))
                         return
                     }
+                    Yangilovchi.ochiqOynalarniYop()
                     reply(.install)
                 }
             ),
@@ -294,6 +295,17 @@ final class YangilashHaydovchi: NSObject, SPUUserDriver {
         withApplicationTerminated applicationTerminated: Bool,
         retryTerminatingApplication: @escaping () -> Void
     ) {
+        // Ilova yopilmagan boʻlsa (ochiq sheet yoki modal oyna «quit» ni bekor
+        // qiladi — «App termination blocked by modal sheet»), Sparkle qayta
+        // urinmaydi va «Oʻrnatilmoqda…» abadiy turardi (1.2.1 relizi, egasining
+        // Mac'i). Foydalanuvchi oʻrnatishni oʻzi tanlagan — oynalarni yopib,
+        // yopishni qayta soʻraymiz.
+        if !applicationTerminated {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                Yangilovchi.ochiqOynalarniYop()
+                retryTerminatingApplication()
+            }
+        }
         guard korinadi else { return }
         holat("Oʻrnatilmoqda…", "", foiz: -1)
     }

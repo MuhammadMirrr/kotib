@@ -3,6 +3,13 @@
 Format — [Keep a Changelog](https://keepachangelog.com/), versiyalar —
 [SemVer](https://semver.org/). Versiya bitta joyda: [`VERSION`](VERSION).
 
+## [Keyingi]
+
+### Tuzatildi
+- macOS: Sozlamalar ochiq turganda «Hozir tekshirish» orqali yangilansa,
+  «Oʻrnatilmoqda…» oynasi qotib qolardi. Endi ochiq oynalar yopiladi va
+  yangilanish oʻrnatiladi.
+
 ## [1.2.1] — 2026-10-08
 
 ### Tuzatildi
