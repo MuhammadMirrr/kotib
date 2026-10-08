@@ -1,0 +1,45 @@
+# Whisper chiqishiga oʻxshash segment korpusi.
+#   <t0> <t1> <matn>     — bitta segment
+#   boʻsh qator          — yangi hujjat
+#   `#` bilan boshlangan — izoh
+#
+# Nima qamraladi: pauza boʻyicha paragrafga boʻlish (qatʼiy 1,5 s va yumshoq
+# 0,8 s + 200 belgi), apostrof variantlari, jumla boshini bosh harf qilish,
+# boʻsh va faqat boʻshliqli segmentlar, ketma-ket boʻshliqlar.
+
+0.00 2.10 assalomu alaykum
+2.20 4.50 bugun havo juda yaxshi
+4.60 6.90 ertaga yomgʻir yogʻishi mumkin
+
+0.00 1.80 birinchi paragraf boshlanishi
+1.90 3.40 va uning davomi
+6.00 8.20 uzoq pauzadan keyingi yangi paragraf
+
+0.00 1.00 o'zbek tilida gapiramiz
+1.10 2.00 o‘zbek tilida ham
+2.10 3.00 oʻzbek tilida ham
+3.10 4.00 sa'nat va san’at va sanʼat
+
+0.00 1.00
+1.10 2.00
+2.10 3.00 faqat shu segmentda matn bor
+
+0.00 1.00 birinchi gap tugadi.
+1.10 2.00 ikkinchisi boshlandi!
+2.10 3.00 uchinchisi ham? ha shunday
+
+0.00 1.00 bu   qatorda    koʻp   boʻshliq bor
+1.10 2.00 va bu yerda ham
+
+0.00 2.00 yumshoq pauza sinovi uchun ancha uzun matn kerak boʻladi shuning uchun bu segment atay uzun yozildi va u ikki yuz belgidan oshadi degan umidda davom etadi hamda yana bir necha soʻz qoʻshiladi
+2.90 4.00 yumshoq pauzadan keyin yangi paragraf boshlanishi kerak
+
+# Diktovka uslubidagi aralash apostroflar (whisper shunday chiqaradi):
+# ASCII ', ’, ‘, `, ´ va allaqachon toʻgʻri ʻ/ʼ — hammasi bir uslubga.
+0.00 4.00 O`zbekiston ma´lumotlari: qo’shimcha g‘oya va e'tibor, maʼno, oʻzbek
+4.10 6.00 ' boshidagi apostrof va so'nggi'
+
+# Takrorlanish halqasi (S23): faqat «diktovka» qatorlari qisqaradi.
+0.00 3.00 oʻzbekiston respublikasi oʻzbekiston respublikasi oʻzbekiston respublikasi
+3.10 6.00 oʻzbekiston respublikasi oʻzbekiston respublikasi va boshqalar
+6.10 7.00 to'la to'la to'la to'la to'la idish

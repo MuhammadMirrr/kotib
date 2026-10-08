@@ -41,13 +41,35 @@ maʼlumot yuboriladi:
 | Tizim versiyasi | macOS 15.2 / Windows 11 26100 | Qoʻllab-quvvatlash uchun |
 | Qurilma turi | arxitektura, protsessor va videokarta modeli, xotira hajmi, yadro soni | Ish unumini tushunish |
 | Taxminiy joylashuv | mamlakat / viloyat / shahar | Til va tarqatish uchun |
-| Amal oʻlchovlari | ovoz uzunligi, ishlov vaqti, tezlik, GPU/CPU, natija (ok/xato) | Ilova qanchalik tez ishlashini oʻlchash |
+| Amal oʻlchovlari | ovoz uzunligi, ishlov vaqti, tezlik, GPU/CPU, natija (ok/xato), natija matnining uzunligi (belgilar soni) | Ilova qanchalik tez ishlashini oʻlchash |
 
 **Taxminiy joylashuv** IP manzildan aniqlanadi, lekin **xom IP saqlanmaydi** —
 u qisqartiriladi va qaytarib boʻlmaydigan tarzda hashlanadi.
 
 **Amal oʻlchovlari** — har transkripsiya yoki tarjima uchun faqat *qancha
-vaqt* va *qanday tez* ekani yoziladi, *nima* qilingani emas.
+vaqt*, *qanday tez* va natija *necha belgi* ekani yoziladi, *nima* qilingani
+(matnning oʻzi) emas.
+
+**Avto-yangilanish** (1.2.0 dan) kuniga bir marta yangi versiya bormi deb
+soʻraydi. Bu soʻrovda **hech qanday identifikator yoʻq** — oʻrnatma raqami ham
+yuborilmaydi; faqat ilova versiyasi (dastur nomi qatorida, standart). Yangilanish
+fayllari imzolangan: ilova faqat Kotib muallifining kaliti bilan imzolangan
+versiyani oʻrnatadi.
+
+**Qurilmangizdagi log** (`~/Library/Logs/Kotib.log`, Windows'da
+`%LOCALAPPDATA%\Kotib\dictation.log`) hech qayerga yuborilmaydi. 1.2.0 dan
+boshlab unda ham diktovka **matni yozilmaydi** — faqat uzunligi va vaqti. Matn faqat
+Sozlamalarda «Diagnostika rejimi» yoqilsa yoziladi (muammoni tekshirish uchun),
+bu rejim 24 soatdan keyin oʻzi oʻchadi. Log 1 MB dan oshsa eskisi
+almashtiriladi.
+
+**Matnga oʻgirilmagan ovoz.** 1.2.0 dan boshlab diktovka matnga oʻgirilmasa
+(masalan, model yuklanmagan boʻlsa) gapirganingiz yoʻqolmasligi uchun ovoz
+qurilmangizda WAV fayl boʻlib saqlanadi
+(`~/Library/Application Support/Kotib/saqlanmagan/`, Windows'da
+`%LOCALAPPDATA%\Kotib\saqlanmagan\`). U hech qayerga yuborilmaydi, matnga
+oʻgirilishi bilan oʻchiriladi; oʻgirilmasa ham 7 kundan ortiq va oxirgi 20 tadan
+koʻp saqlanmaydi. Muvaffaqiyatli diktovka ovozi hech qachon saqlanmaydi.
 
 ---
 

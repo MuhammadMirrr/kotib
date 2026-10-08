@@ -1,0 +1,21 @@
+﻿KOTIB — FOYDALANISH SHARTLARI VA MAXFIYLIK SIYOSATI (XULOSA)
+
+Kotib diktovka, audio fayldan matn va oflayn tarjima ilovasi. Ovoz tanish va
+tarjima butunlay sizning qurilmangizda bajariladi.
+
+OVOZ VA MATN HECH QACHON YUBORILMAYDI. Nimani diktovka qilganingiz,
+transkripsiya yoki tarjima natijasi faqat qurilmangizda qoladi.
+
+Ilovani yaxshilash uchun ANONIM statistika yuboriladi:
+  - ilova va Windows versiyasi;
+  - qurilma turi: protsessor, videokarta, xotira, arxitektura;
+  - taxminiy joylashuv (mamlakat/shahar);
+  - har transkripsiya/tarjima uchun tezlik va davomiylik.
+Bu statistika doim yoqiq.
+
+YIGʻILMAYDI: ovoz, matn, fayl nomlari, xom IP manzil, seriya raqami,
+MachineGuid, MAC manzil, foydalanuvchi nomi, oʻrnatilgan dasturlar yoki
+jarayonlar roʻyxati.
+
+Ilovani oʻrnatib, siz shu shartlar va maxfiylik siyosatiga rozilik
+bildirasiz. Toʻliq matn: https://uzb.mirqobilov.com/maxfiylik

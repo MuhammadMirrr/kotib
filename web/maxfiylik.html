@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kotib — Maxfiylik siyosati</title>
+<link rel="canonical" href="https://uzb.mirqobilov.com/maxfiylik">
+<meta name="author" content="Muhammad Mirqobilov (Mirkabilov)">
+<style>
+  :root {
+    --bg:#F0EEE6; --surface:#FAF9F5; --ink:#191917; --ink-soft:#4A4842;
+    --ink-mute:#63605A; --line:#D6D1C2; --accent:#A94E2E; --ok:#2F6B41;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--ink-soft); font-family:var(--sans);
+         line-height:1.6; padding:40px 20px; }
+  .ichi { max-width:720px; margin:0 auto; }
+  h1 { font-family:var(--serif); font-size:30px; color:var(--ink); margin-bottom:6px; }
+  h2 { font-size:19px; color:var(--ink); margin:32px 0 10px; }
+  .sana { color:var(--ink-mute); font-size:14px; margin-bottom:24px; }
+  p, li { margin-bottom:10px; }
+  ul { padding-left:22px; }
+  a { color:var(--accent); }
+  .muhim { background:var(--surface); border:1px solid var(--line);
+           border-left:3px solid var(--ok); border-radius:10px; padding:16px 18px; margin:18px 0; }
+  table { width:100%; border-collapse:collapse; background:var(--surface);
+          border:1px solid var(--line); border-radius:10px; overflow:hidden; margin:14px 0; }
+  th,td { padding:9px 12px; text-align:left; font-size:14px; border-bottom:1px solid var(--line); }
+  th { color:var(--ink-mute); font-weight:600; font-size:13px; }
+  tr:last-child td { border-bottom:none; }
+  .orqaga { display:inline-block; margin-top:28px; font-size:14px; }
+  footer { margin-top:36px; padding-top:18px; border-top:1px solid var(--line);
+           color:var(--ink-mute); font-size:13px; }
+</style>
+</head>
+<body>
+<div class="ichi">
+  <h1>Maxfiylik siyosati va foydalanish shartlari</h1>
+  <p class="sana">Kotib · oxirgi yangilanish: 2026-09-10</p>
+
+  <p>Kotib — oʻzbek tili uchun diktovka, audio fayldan matn va oflayn tarjima
+  ilovasi. Ovoz tanish va tarjima <strong>butunlay sizning qurilmangizda</strong>,
+  internetsiz bajariladi.</p>
+
+  <div class="muhim">
+    <strong>Ovoz va matn hech qachon yuborilmaydi.</strong> Nimani diktovka
+    qilganingiz, transkripsiya yoki tarjima natijasi — hammasi faqat sizning
+    qurilmangizda qoladi.
+  </div>
+
+  <h2>Nima HECH QACHON chiqmaydi</h2>
+  <ul>
+    <li>Ovoz yozuvi va audio fayllaringiz.</li>
+    <li>Matn — diktovka, transkripsiya yoki tarjima natijasi.</li>
+    <li>Fayl nomlari, mikrofon nomi, email, hisob maʼlumotlari, AI kalitlari.</li>
+    <li>Xom IP manzil.</li>
+    <li>Qurilmani shaxsan belgilaydigan identifikatorlar: seriya raqami,
+        Hardware UUID, MachineGuid, MAC manzil, foydalanuvchi nomi.</li>
+    <li>Oʻrnatilgan dasturlar, jarayonlar, klaviatura bosishlari, ekran tasviri,
+        bufer (clipboard), oyna sarlavhalari.</li>
+  </ul>
+
+  <h2>Nima yigʻiladi (anonim)</h2>
+  <p>Ilovani yaxshilash uchun quyidagi anonim maʼlumot yuboriladi:</p>
+  <table>
+    <tr><th>Maʼlumot</th><th>Nima uchun</th></tr>
+    <tr><td>Tasodifiy oʻrnatma raqami</td><td>«Bu bitta oʻrnatma» deyish uchun</td></tr>
+    <tr><td>Platforma, ilova va tizim versiyasi</td><td>Qoʻllab-quvvatlash</td></tr>
+    <tr><td>Qurilma turi: arxitektura, protsessor va videokarta modeli, xotira, yadro soni</td><td>Ish unumini tushunish</td></tr>
+    <tr><td>Taxminiy joylashuv (mamlakat/viloyat/shahar)</td><td>Til va tarqatish</td></tr>
+    <tr><td>Har amal uchun: ovoz uzunligi, ishlov vaqti, tezlik, GPU/CPU, natija, natija uzunligi (belgilar soni)</td><td>Tezlikni oʻlchash</td></tr>
+  </table>
+  <p>Taxminiy joylashuv IP manzildan aniqlanadi, lekin <strong>xom IP
+  saqlanmaydi</strong> — u qisqartiriladi va qaytarib boʻlmaydigan tarzda
+  hashlanadi. Amal oʻlchovlari faqat <em>qancha vaqt</em>, <em>qanday tez</em> va
+  natija <em>necha belgi</em> ekanini yozadi, <em>nima</em> qilinganini emas.</p>
+  <p>Qurilmangizdagi log hech qayerga yuborilmaydi. 1.2.0 dan boshlab unda
+  ham diktovka <strong>matni yozilmaydi</strong> — faqat uzunligi va vaqti. Matn faqat
+  Sozlamalarda «Diagnostika rejimi» yoqilsa yoziladi; bu rejim 24 soatdan
+  keyin oʻzi oʻchadi.</p>
+
+  <p>1.2.0 dan boshlab diktovka matnga oʻgirilmasa (masalan, model yuklanmagan
+  boʻlsa) gapirganingiz yoʻqolmasligi uchun ovoz <strong>faqat qurilmangizda</strong>
+  WAV fayl boʻlib saqlanadi. U hech qayerga yuborilmaydi, matnga oʻgirilishi bilan
+  oʻchiriladi; oʻgirilmasa ham 7 kundan ortiq va oxirgi 20 tadan koʻp saqlanmaydi.
+  Muvaffaqiyatli diktovka ovozi hech qachon saqlanmaydi.</p>
+
+  <h2>Bu anonim</h2>
+  <p>Oʻrnatma raqami tasodifiy — qurilma yoki shaxs identifikatori emas. Ilovani
+  oʻchirib qayta oʻrnatsangiz yangisi paydo boʻladi. Yigʻilgan maʼlumotdan
+  kimligingizni aniqlab boʻlmaydi.</p>
+
+  <h2>Rozilik</h2>
+  <p>Bu anonim statistika doim yoqiq. Ilovani oʻrnatib va ishlatib, siz shu
+  maxfiylik siyosati va foydalanish shartlariga rozilik bildirasiz. Statistika
+  ilovaning ishlashiga taʼsir qilmaydi — diktovka, studiya va tarjima
+  internetsiz ham toʻliq ishlaydi.</p>
+
+  <h2>Saqlash va tarqatish</h2>
+  <p>Amal oʻlchovlari 60 kundan keyin avtomatik oʻchiriladi. Maʼlumot faqat
+  ilova egasiga koʻrinadi — <strong>uchinchi shaxsga berilmaydi, sotilmaydi</strong>,
+  reklama yoki kuzatuv uchun ishlatilmaydi.</p>
+
+  <h2>Bogʻlanish</h2>
+  <p>Savol yoki maʼlumotingizni oʻchirish uchun:
+  <a href="mailto:muhammadmirqobilov@gmail.com">muhammadmirqobilov@gmail.com</a></p>
+
+  <a class="orqaga" href="/">← Bosh sahifaga</a>
+  <footer>Kotib mustaqil loyiha. Apple, Microsoft yoki boshqa kompaniya bilan
+  aloqasi yoʻq.</footer>
+</div>
+</body>
+</html>

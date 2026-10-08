@@ -1,0 +1,12 @@
+# `git blame` bu commit'larni oʻtkazib yuboradi — ular faqat koʻrinishni
+# oʻzgartirgan. GitHub buni oʻzi oʻqiydi; mahalliy:
+#   git config blame.ignoreRevsFile .git-blame-ignore-revs
+
+# S20: faqat formatlash (swift format)
+c12de7bf0771720dbfb0061f0fecc561d244f7ac
+# S20: Swift izohlarida ʻ/ʼ
+990da49c0a9854adb3ec9a61b463587e88f4fd2a
+# S21: faqat formatlash (clang-format)
+4aaa940ddba49fddb74301653f44e97ceeb0a698
+# S21: C/C++ izohlarida ʻ/ʼ
+b59653a18a31dbf1850190c8ede3f484452693e1

@@ -1,0 +1,34 @@
+# C/C++ uslubi (Windows ilovasi, umumiy C shim va tarjima koʻprigi).
+# Faqat koʻrinish: include tartibiga TEGILMAYDI (<windows.h> tartibi muhim),
+# izohlar qayta oʻralmaydi (oʻzbekcha matn qoʻlda tekislangan).
+#   ./scripts/formatla.sh            # Swift + C/C++
+#   ./scripts/formatla.sh --tekshir  # CI
+BasedOnStyle: LLVM
+Standard: c++20
+IndentWidth: 4
+ColumnLimit: 100
+AccessModifierOffset: -4
+NamespaceIndentation: None
+IndentCaseLabels: true
+BreakBeforeBraces: Attach
+AlignAfterOpenBracket: Align
+BinPackArguments: true
+BinPackParameters: true
+AllowShortFunctionsOnASingleLine: All
+AllowShortIfStatementsOnASingleLine: WithoutElse
+AllowShortLoopsOnASingleLine: true
+AllowShortCaseLabelsOnASingleLine: true
+AllowShortBlocksOnASingleLine: Always
+AllowShortLambdasOnASingleLine: All
+AlignConsecutiveAssignments: None
+AlignConsecutiveMacros: Consecutive
+AlignTrailingComments: true
+SpacesBeforeTrailingComments: 2
+DerivePointerAlignment: true
+PointerAlignment: Left
+SortIncludes: Never
+IncludeBlocks: Preserve
+ReflowComments: false
+MaxEmptyLinesToKeep: 1
+KeepEmptyLinesAtTheStartOfBlocks: false
+InsertNewlineAtEOF: true

@@ -1,0 +1,12 @@
+{
+  "mac": {
+    "versiya": "1.2.0",
+    "url": "https://cdn.mirqobilov.com/dl/mac/Kotib-1.2.0-mac.pkg",
+    "izoh": "Bu oxirgi qoʻlda yangilash — keyingi versiyalar avtomatik oʻrnatiladi."
+  },
+  "win": {
+    "versiya": "1.2.0",
+    "url": "https://cdn.mirqobilov.com/dl/win/Kotib-1.2.0-win-setup.exe",
+    "izoh": "Bu oxirgi qoʻlda yangilash — keyingi versiyalar avtomatik oʻrnatiladi."
+  }
+}

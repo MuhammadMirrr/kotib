@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+  <!-- Bu — manifestning SxS identifikatori, ilova versiyasi EMAS: Windows
+       uni .exe uchun ishlatmaydi. Shuning uchun ataylab 1.0.0.0 da qotirilgan
+       va VERSION ga ergashmaydi. Ilova versiyasi app.rc dagi VERSIONINFO da
+       (VERSION faylidan CMake orqali keladi). -->
+  <assemblyIdentity type="win32" name="Kotib" version="1.0.0.0"
+                    processorArchitecture="amd64"/>
+
+  <!-- Zamonaviy boshqaruv elementlari (Common Controls 6). Busiz tugmalar
+       va ro'yxatlar Windows 95 uslubida ko'rinadi. -->
+  <dependency>
+    <dependentAssembly>
+      <assemblyIdentity type="win32" name="Microsoft.Windows.Common-Controls"
+                        version="6.0.0.0" processorArchitecture="amd64"
+                        publicKeyToken="6595b64144ccf1df" language="*"/>
+    </dependentAssembly>
+  </dependency>
+
+  <!-- Administrator huquqi KERAK EMAS.
+       Muhim: agar ilova admin sifatida ishlaganida, oddiy ilovalarga matn
+       yubora olardi, lekin avtostart va sozlamalar boshqa foydalanuvchi
+       profiliga tushib qolardi. asInvoker to'g'ri tanlov. -->
+  <trustInfo xmlns="urn:schemas-microsoft-com:asm.v3">
+    <security>
+      <requestedPrivileges>
+        <requestedExecutionLevel level="asInvoker" uiAccess="false"/>
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+
+  <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
+    <application>
+      <!-- Windows 10 va 11 -->
+      <supportedOS Id="{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}"/>
+    </application>
+  </compatibility>
+
+  <application xmlns="urn:schemas-microsoft-com:asm.v3">
+    <windowsSettings>
+      <!-- Yuqori DPI: har monitor uchun alohida masshtab. Kodda ham
+           o'rnatiladi, lekin manifestdagi qiymat ishonchliroq — u
+           jarayon boshlanishidan oldin qo'llanadi. -->
+      <dpiAwareness xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">PerMonitorV2</dpiAwareness>
+      <!-- Manba fayllar UTF-8 da; API'lar ham UTF-8 kutadi. -->
+      <activeCodePage xmlns="http://schemas.microsoft.com/SMI/2019/WindowsSettings">UTF-8</activeCodePage>
+    </windowsSettings>
+  </application>
+</assembly>

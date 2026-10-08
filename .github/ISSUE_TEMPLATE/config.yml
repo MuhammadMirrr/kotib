@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Zaiflik haqida (maxfiy)
+    url: https://github.com/MuhammadMirrr/kotib/security/advisories/new
+    about: Xavfsizlik muammosini ochiq issue'da emas, shu yerda yoki SECURITY.md dagi email orqali yuboring.
+  - name: Savol va takliflar (Telegram)
+    url: https://t.me/mirqobilov_mm
+    about: Tezkor savollar uchun.

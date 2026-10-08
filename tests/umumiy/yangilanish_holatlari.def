@@ -1,0 +1,288 @@
+// Avto-yangilanish mantigʻining UMUMIY test holatlari — macOS va Windows bir xil
+// jadvaldan sinaladi:
+//   • Windows: win/tests/test_yangilanish.cpp bu faylni `#include` qiladi
+//     (X-makro) — jadval kotib-testlar.exe ichiga kompilyatsiya vaqtida kiradi;
+//   • macOS: tests/test_yangilanish.swift faylni ish paytida oʻqib tahlil qiladi.
+//
+// Format: har qator — bitta makro chaqiruvi, argumentlar C literallari
+// (satrlar qoʻshtirnoqda, `\"` va `\\` qochish belgilari bilan). Izoh — `//`
+// bilan boshlanadigan alohida qator. Bitta holat — bitta qator.
+//
+// Nega bitta jadval: ikki platforma bir serverdan bir xil manifest oladi va bir
+// xil qaror qabul qilishi SHART. Holatlar ikki nusxada yozilsa, bir kun biri
+// boshqasidan ajralib qoladi va buni hech kim sezmaydi.
+//
+// Spec: docs/superpowers/specs/2026-10-07-avto-yangilanish-design.md
+// Reja: docs/superpowers/plans/2026-10-07-s2-imzo-va-siyosat.md
+
+// ---------------------------------------------------------------- versiya
+// VERSIYA(a, b, kutilgan) — taqqosla(a, b): -1 (a eski) | 0 | 1 (a yangi)
+VERSIYA("1.1.0", "1.0.0", 1)
+VERSIYA("1.0.0", "1.1.0", -1)
+VERSIYA("1.1.0", "1.1.0", 0)
+VERSIYA("1.10.0", "1.9.0", 1)
+VERSIYA("1.9.0", "1.10.0", -1)
+VERSIYA("2.0.0", "1.99.99", 1)
+VERSIYA("1.0.1", "1.0.0", 1)
+VERSIYA("1.0.0", "0.99.99", 1)
+VERSIYA("1.1", "1.0.0", 1)
+VERSIYA("1.0", "1.0.0", 0)
+VERSIYA("1.0.0", "1.0", 0)
+VERSIYA("1.0.0.1", "1.0.0", 1)
+VERSIYA("", "1.0.0", -1)
+VERSIYA("nomaʼlum", "1.0.0", -1)
+VERSIYA("1.0.0", "", 1)
+VERSIYA("", "", 0)
+VERSIYA("1a.0.0", "1.0.0", -1)
+VERSIYA("1.2.99999999999", "1.2.1", 1)
+VERSIYA("1.2.0-rc1", "1.2.0", -1)
+VERSIYA("1.2.0", "1.2.0-rc1", 1)
+VERSIYA("1.2.0-rc1", "1.1.9", 1)
+VERSIYA("1.2.0-sinov9", "1.2.0-sinov10", -1)
+VERSIYA("1.2.0-sinov2", "1.2.0-sinov1", 1)
+VERSIYA("1.2.0-sinov1", "1.2.0-sinov1", 0)
+VERSIYA("1.2.0-rc.2", "1.2.0-rc.10", -1)
+VERSIYA("1.2.0-rc", "1.2.0-rc.1", -1)
+VERSIYA("1.2.0-1", "1.2.0-rc", -1)
+VERSIYA("1.2.0-rc01", "1.2.0-rc1", 0)
+VERSIYA("1.2.0-alpha", "1.2.0-beta", -1)
+
+// FORMAT(versiya, kutilgan) — manifest va VERSION fayli qabul qiladigan shakl:
+// KATTA.KICHIK.TUZATISH[-qoʻshimcha], qoʻshimcha faqat [0-9A-Za-z.]
+FORMAT("1.2.0", true)
+FORMAT("1.2.0-sinov1", true)
+FORMAT("1.2.0-rc.1", true)
+FORMAT("01.2.0", true)
+FORMAT("1.2", false)
+FORMAT("1.2.0.0", false)
+FORMAT("v1.2.0", false)
+FORMAT("1.2.0-", false)
+FORMAT("1.2.0-rc_1", false)
+FORMAT("1.2.0-a-b", false)
+FORMAT("", false)
+FORMAT(" 1.2.0", false)
+FORMAT("1..0", false)
+
+// ---------------------------------------------------------------- siyosat
+// SIYOSAT(nom, joriy, versiya, min, muhlat_soat, foiz, chelak, korilgan, hozir, kutilgan)
+//   min ""         — majburiy chegara yoʻq
+//   chelak 0–99    — ilova birinchi ishga tushganda tanlagan tasodifiy son
+//   korilgan -1    — majburiy siyosat hali koʻrilmagan; aks holda unix soniya
+//   kutilgan       — HECH | YUKLA (oddiy, boʻsh paytda) | ORNAT (majburiy,
+//                    darhol) | BLOKLA (muhlat tugadi — diktovka toʻxtaydi)
+SIYOSAT("yangi versiya, hammaga", "1.1.0", "1.2.0", "", 72, 100, 50, -1, 1000, YUKLA)
+SIYOSAT("oʻzimiz eng yangi", "1.2.0", "1.2.0", "", 72, 100, 0, -1, 1000, HECH)
+SIYOSAT("eski versiyaga tushirilmaydi", "1.3.0", "1.2.0", "", 72, 100, 0, -1, 1000, HECH)
+SIYOSAT("foiz: chelak ichida", "1.1.0", "1.2.0", "", 72, 10, 9, -1, 1000, YUKLA)
+SIYOSAT("foiz: chelak chegarada", "1.1.0", "1.2.0", "", 72, 10, 10, -1, 1000, HECH)
+SIYOSAT("foiz 0 — hech kimga", "1.1.0", "1.2.0", "", 72, 0, 0, -1, 1000, HECH)
+SIYOSAT("majburiy, hali koʻrilmagan", "1.1.0", "1.2.1", "1.2.0", 72, 100, 50, -1, 1000, ORNAT)
+SIYOSAT("majburiy, muhlat ichida", "1.1.0", "1.2.1", "1.2.0", 72, 100, 50, 1000, 260199, ORNAT)
+SIYOSAT("majburiy, muhlat tugadi", "1.1.0", "1.2.1", "1.2.0", 72, 100, 50, 1000, 260200, BLOKLA)
+SIYOSAT("majburiy, foiz eʼtiborsiz", "1.1.0", "1.2.1", "1.2.0", 72, 0, 99, -1, 1000, ORNAT)
+SIYOSAT("majburiy, muhlat 0 — darhol blok", "1.1.0", "1.2.1", "1.2.0", 0, 100, 50, -1, 1000, BLOKLA)
+SIYOSAT("majburiy, soat orqaga surilgan", "1.1.0", "1.2.1", "1.2.0", 72, 100, 50, 5000, 1000, ORNAT)
+SIYOSAT("min bajarilgan — oddiy yangilanish", "1.2.0", "1.2.1", "1.2.0", 72, 100, 50, -1, 1000, YUKLA)
+SIYOSAT("min bajarilgan, foizdan tashqari", "1.2.0", "1.2.1", "1.2.0", 72, 10, 50, -1, 1000, HECH)
+SIYOSAT("min > versiya — manifest yaroqsiz", "1.1.0", "1.2.0", "1.3.0", 72, 100, 50, -1, 1000, HECH)
+SIYOSAT("sinov kanali", "1.2.0-sinov1", "1.2.0-sinov2", "", 72, 100, 0, -1, 0, YUKLA)
+SIYOSAT("rc dan relizga", "1.2.0-rc1", "1.2.0", "", 72, 100, 0, -1, 0, YUKLA)
+SIYOSAT("min = versiya, muhlat 0", "1.1.0", "1.2.0", "1.2.0", 0, 100, 0, -1, 0, BLOKLA)
+
+// ---------------------------------------------------------------- URL
+// URL(url, tur, kutilgan) — tur: FAYL_URL (cdn) | MANIFEST_URL (stat).
+// Qoida ataylab qatʼiy va URL tahlilchisiz: aniq prefiks, keyin faqat
+// [A-Za-z0-9._~/-], boʻsh, «.» va «..» segmentlarsiz. Ikki platforma bir xil.
+URL("https://cdn.mirqobilov.com/dl/v1.2.1/Kotib-1.2.1-win-yangilash.exe", FAYL_URL, true)
+URL("https://cdn.mirqobilov.com/dl/v1.2.1/Kotib-1.2.1-mac.zip", FAYL_URL, true)
+URL("http://cdn.mirqobilov.com/dl/a.exe", FAYL_URL, false)
+URL("https://cdn.mirqobilov.com.evil.com/a.exe", FAYL_URL, false)
+URL("https://cdn.mirqobilov.com@evil.com/a.exe", FAYL_URL, false)
+URL("https://evil.com/cdn.mirqobilov.com/a.exe", FAYL_URL, false)
+URL("https://CDN.mirqobilov.com/a.exe", FAYL_URL, false)
+URL("https://cdn.mirqobilov.com:443/a.exe", FAYL_URL, false)
+URL("https://cdn.mirqobilov.com/dl/../a.exe", FAYL_URL, false)
+URL("https://cdn.mirqobilov.com/dl/./a.exe", FAYL_URL, false)
+URL("https://cdn.mirqobilov.com/dl/a.exe?x=1", FAYL_URL, false)
+URL("https://cdn.mirqobilov.com/dl/a.exe#x", FAYL_URL, false)
+URL("https://cdn.mirqobilov.com/dl\\a.exe", FAYL_URL, false)
+URL("https://cdn.mirqobilov.com/", FAYL_URL, false)
+URL("https://cdn.mirqobilov.com/dl//a.exe", FAYL_URL, false)
+URL("https://cdn.mirqobilov.com/dl/a.exe/", FAYL_URL, false)
+URL("https://cdn.mirqobilov.com/dl/a b.exe", FAYL_URL, false)
+URL("https://cdn.mirqobilov.com/dl/a%2e.exe", FAYL_URL, false)
+URL("\\\\server\\share\\a.exe", FAYL_URL, false)
+URL("file:///C:/a.exe", FAYL_URL, false)
+URL("", FAYL_URL, false)
+URL("https://stat.mirqobilov.com/v1/yangilanish/win.json", FAYL_URL, false)
+URL("https://stat.mirqobilov.com/v1/yangilanish/win.json", MANIFEST_URL, true)
+URL("https://cdn.mirqobilov.com/v1/yangilanish/win.json", MANIFEST_URL, false)
+
+// ---------------------------------------------------------------- base64
+// BASE64(nom, kirish, kutilgan_hex) — kutilgan "RAD": rad etilishi kerak.
+// Faqat standart alifbo, toʻldirish (=) bilan, boʻshliqsiz.
+BASE64("boʻsh", "", "")
+BASE64("1 bayt", "YQ==", "61")
+BASE64("2 bayt", "YWI=", "6162")
+BASE64("3 bayt", "YWJj", "616263")
+BASE64("toʻldirishsiz", "YQ", "RAD")
+BASE64("notoʻgʻri uzunlik", "YQ=", "RAD")
+BASE64("begona belgi", "Y!==", "RAD")
+BASE64("boʻshliq", "YW Jj", "RAD")
+BASE64("boshida =", "=YWJ", "RAD")
+BASE64("URL alifbosi", "YW-_", "RAD")
+
+// ---------------------------------------------------------------- Ed25519
+// ED25519(nom, ochiq_kalit_hex, xabar_hex, imzo_hex, kutilgan)
+// Toʻgʻri holatlar — RFC 8032, 7.1-boʻlim (TEST 1, 2, 3, 1024, SHA(abc)),
+// rfc-editor.org matnidan olingan. Buzilganlari — ulardan bitta bit oʻzgartirib.
+// Chegaraviy (malleable/kichik tartibli nuqta) holatlar ATAYLAB yoʻq:
+// CryptoKit va Monocypher ularda farq qilishi mumkin, Sparkle imzolari esa
+// ularni hech qachon bermaydi.
+ED25519("RFC 8032 TEST 1", "d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a", "", "e5564300c360ac729086e2cc806e828a84877f1eb8e5d974d873e065224901555fb8821590a33bacc61e39701cf9b46bd25bf5f0595bbe24655141438e7a100b", true)
+ED25519("RFC 8032 TEST 2", "3d4017c3e843895a92b70aa74d1b7ebc9c982ccf2ec4968cc0cd55f12af4660c", "72", "92a009a9f0d4cab8720e820b5f642540a2b27b5416503f8fb3762223ebdb69da085ac1e43e15996e458f3613d0f11d8c387b2eaeb4302aeeb00d291612bb0c00", true)
+ED25519("RFC 8032 TEST 3", "fc51cd8e6218a1a38da47ed00230f0580816ed13ba3303ac5deb911548908025", "af82", "6291d657deec24024827e69c3abe01a30ce548a284743a445e3680d7db5ac3ac18ff9b538d16f290ae67f760984dc6594a7c15e9716ed28dc027beceea1ec40a", true)
+ED25519("RFC 8032 TEST 1024", "278117fc144c72340f67d0f2316e8386ceffbf2b2428c9c51fef7c597f1d426e", "08b8b2b733424243760fe426a4b54908632110a66c2f6591eabd3345e3e4eb98fa6e264bf09efe12ee50f8f54e9f77b1e355f6c50544e23fb1433ddf73be84d879de7c0046dc4996d9e773f4bc9efe5738829adb26c81b37c93a1b270b20329d658675fc6ea534e0810a4432826bf58c941efb65d57a338bbd2e26640f89ffbc1a858efcb8550ee3a5e1998bd177e93a7363c344fe6b199ee5d02e82d522c4feba15452f80288a821a579116ec6dad2b3b310da903401aa62100ab5d1a36553e06203b33890cc9b832f79ef80560ccb9a39ce767967ed628c6ad573cb116dbefefd75499da96bd68a8a97b928a8bbc103b6621fcde2beca1231d206be6cd9ec7aff6f6c94fcd7204ed3455c68c83f4a41da4af2b74ef5c53f1d8ac70bdcb7ed185ce81bd84359d44254d95629e9855a94a7c1958d1f8ada5d0532ed8a5aa3fb2d17ba70eb6248e594e1a2297acbbb39d502f1a8c6eb6f1ce22b3de1a1f40cc24554119a831a9aad6079cad88425de6bde1a9187ebb6092cf67bf2b13fd65f27088d78b7e883c8759d2c4f5c65adb7553878ad575f9fad878e80a0c9ba63bcbcc2732e69485bbc9c90bfbd62481d9089beccf80cfe2df16a2cf65bd92dd597b0707e0917af48bbb75fed413d238f5555a7a569d80c3414a8d0859dc65a46128bab27af87a71314f318c782b23ebfe808b82b0ce26401d2e22f04d83d1255dc51addd3b75a2b1ae0784504df543af8969be3ea7082ff7fc9888c144da2af58429ec96031dbcad3dad9af0dcbaaaf268cb8fcffead94f3c7ca495e056a9b47acdb751fb73e666c6c655ade8297297d07ad1ba5e43f1bca32301651339e22904cc8c42f58c30c04aafdb038dda0847dd988dcda6f3bfd15c4b4c4525004aa06eeff8ca61783aacec57fb3d1f92b0fe2fd1a85f6724517b65e614ad6808d6f6ee34dff7310fdc82aebfd904b01e1dc54b2927094b2db68d6f903b68401adebf5a7e08d78ff4ef5d63653a65040cf9bfd4aca7984a74d37145986780fc0b16ac451649de6188a7dbdf191f64b5fc5e2ab47b57f7f7276cd419c17a3ca8e1b939ae49e488acba6b965610b5480109c8b17b80e1b7b750dfc7598d5d5011fd2dcc5600a32ef5b52a1ecc820e308aa342721aac0943bf6686b64b2579376504ccc493d97e6aed3fb0f9cd71a43dd497f01f17c0e2cb3797aa2a2f256656168e6c496afc5fb93246f6b1116398a346f1a641f3b041e989f7914f90cc2c7fff357876e506b50d334ba77c225bc307ba537152f3f1610e4eafe595f6d9d90d11faa933a15ef1369546868a7f3a45a96768d40fd9d03412c091c6315cf4fde7cb68606937380db2eaaa707b4c4185c32eddcdd306705e4dc1ffc872eeee475a64dfac86aba41c0618983f8741c5ef68d3a101e8a3b8cac60c905c15fc910840b94c00a0b9d0", "0aab4c900501b3e24d7cdf4663326a3a87df5e4843b2cbdb67cbf6e460fec350aa5371b1508f9f4528ecea23c436d94b5e8fcd4f681e30a6ac00a9704a188a03", true)
+ED25519("RFC 8032 TEST SHA(abc)", "ec172b93ad5e563bf4932c70e1245034c35467ef2efd4d64ebf819683467e2bf", "ddaf35a193617abacc417349ae20413112e6fa4e89a97ea20a9eeee64b55d39a2192992a274fc1a836ba3c23a3feebbd454d4423643ce80e2a9ac94fa54ca49f", "dc2a4459e7369633a52b1bf277839a00201009a3efbf3ecb69bea2186c26b58909351fc9ac90b3ecfdfbc7c66431e0303dca179c138ac17ad9bef1177331a704", true)
+ED25519("xabarning 1 biti", "3d4017c3e843895a92b70aa74d1b7ebc9c982ccf2ec4968cc0cd55f12af4660c", "73", "92a009a9f0d4cab8720e820b5f642540a2b27b5416503f8fb3762223ebdb69da085ac1e43e15996e458f3613d0f11d8c387b2eaeb4302aeeb00d291612bb0c00", false)
+ED25519("imzoning R qismi", "3d4017c3e843895a92b70aa74d1b7ebc9c982ccf2ec4968cc0cd55f12af4660c", "72", "93a009a9f0d4cab8720e820b5f642540a2b27b5416503f8fb3762223ebdb69da085ac1e43e15996e458f3613d0f11d8c387b2eaeb4302aeeb00d291612bb0c00", false)
+ED25519("imzoning S qismi", "3d4017c3e843895a92b70aa74d1b7ebc9c982ccf2ec4968cc0cd55f12af4660c", "72", "92a009a9f0d4cab8720e820b5f642540a2b27b5416503f8fb3762223ebdb69da095ac1e43e15996e458f3613d0f11d8c387b2eaeb4302aeeb00d291612bb0c00", false)
+ED25519("ochiq kalitning 1 biti", "3d4117c3e843895a92b70aa74d1b7ebc9c982ccf2ec4968cc0cd55f12af4660c", "72", "92a009a9f0d4cab8720e820b5f642540a2b27b5416503f8fb3762223ebdb69da085ac1e43e15996e458f3613d0f11d8c387b2eaeb4302aeeb00d291612bb0c00", false)
+ED25519("boshqa kalit", "fc51cd8e6218a1a38da47ed00230f0580816ed13ba3303ac5deb911548908025", "72", "92a009a9f0d4cab8720e820b5f642540a2b27b5416503f8fb3762223ebdb69da085ac1e43e15996e458f3613d0f11d8c387b2eaeb4302aeeb00d291612bb0c00", false)
+ED25519("kalit 31 bayt", "3d4017c3e843895a92b70aa74d1b7ebc9c982ccf2ec4968cc0cd55f12af466", "72", "92a009a9f0d4cab8720e820b5f642540a2b27b5416503f8fb3762223ebdb69da085ac1e43e15996e458f3613d0f11d8c387b2eaeb4302aeeb00d291612bb0c00", false)
+ED25519("imzo 63 bayt", "3d4017c3e843895a92b70aa74d1b7ebc9c982ccf2ec4968cc0cd55f12af4660c", "72", "92a009a9f0d4cab8720e820b5f642540a2b27b5416503f8fb3762223ebdb69da085ac1e43e15996e458f3613d0f11d8c387b2eaeb4302aeeb00d291612bb0c", false)
+ED25519("imzo boʻsh", "3d4017c3e843895a92b70aa74d1b7ebc9c982ccf2ec4968cc0cd55f12af4660c", "72", "", false)
+
+// ---------------------------------------------------------------- manifest
+// MANIFEST holatlari imzolaydigan sinov kaliti — RFC 8032 TEST 1 (ochiq
+// eʼlon qilingan, faqat test uchun) va BOSHQA_KALIT rejimi uchun TEST 2 ochiq kaliti.
+SINOV_KALITI("9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60", "d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a")
+BOSHQA_KALIT("3d4017c3e843895a92b70aa74d1b7ebc9c982ccf2ec4968cc0cd55f12af4660c")
+
+// MANIFEST(nom, platforma, manifest_json, rejim, kutilgan)
+//   Test manifestni RFC 8032 TEST 1 kaliti bilan oʻzi imzolaydi va server
+//   javobini {"m": base64(manifest), "s": base64(imzo)} koʻrinishida yasaydi.
+//   rejim: TOGRI | BUZUQ_IMZO (imzoning 1 biti) | BUZUQ_XABAR (m ga boʻshliq
+//          qoʻshilgan) | BOSHQA_KALIT (TEST 2 ochiq kaliti bilan tekshiriladi)
+//   kutilgan: "RAD" yoki tahlil natijasining xulosasi:
+//     v=<versiya>;min=<min>;muhlat=<soat>;foiz=<foiz>;izoh=<izoh>
+//     va har arxitektura uchun (alifbo tartibida) ;<arx>=<url>|<hajm>|<sha256>|imzo<bayt>
+MANIFEST("win: toʻliq, toʻgʻri", "win", "{\"platforma\":\"win\",\"versiya\":\"1.2.1\",\"min_versiya\":\"1.2.0\",\"majburiy_muhlat_soat\":72,\"tarqatish_foiz\":10,\"izoh\":\"Mikrofon ochilishidagi xato tuzatildi.\",\"fayllar\":{\"x64\":{\"url\":\"https://cdn.mirqobilov.com/dl/v1.2.1/Kotib-1.2.1-win-yangilash.exe\",\"hajm\":41234567,\"sha256\":\"9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08\",\"imzo\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==\"},\"arm64\":{\"url\":\"https://cdn.mirqobilov.com/dl/v1.2.1/Kotib-1.2.1-win-yangilash-arm64.exe\",\"hajm\":40000000,\"sha256\":\"9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08\",\"imzo\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==\"}}}", TOGRI, "v=1.2.1;min=1.2.0;muhlat=72;foiz=10;izoh=Mikrofon ochilishidagi xato tuzatildi.;arm64=https://cdn.mirqobilov.com/dl/v1.2.1/Kotib-1.2.1-win-yangilash-arm64.exe|40000000|9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08|imzo64;x64=https://cdn.mirqobilov.com/dl/v1.2.1/Kotib-1.2.1-win-yangilash.exe|41234567|9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08|imzo64")
+MANIFEST("win: imzo buzilgan", "win", "{\"platforma\":\"win\",\"versiya\":\"1.2.1\",\"min_versiya\":\"1.2.0\",\"majburiy_muhlat_soat\":72,\"tarqatish_foiz\":10,\"izoh\":\"Mikrofon ochilishidagi xato tuzatildi.\",\"fayllar\":{\"x64\":{\"url\":\"https://cdn.mirqobilov.com/dl/v1.2.1/Kotib-1.2.1-win-yangilash.exe\",\"hajm\":41234567,\"sha256\":\"9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08\",\"imzo\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==\"},\"arm64\":{\"url\":\"https://cdn.mirqobilov.com/dl/v1.2.1/Kotib-1.2.1-win-yangilash-arm64.exe\",\"hajm\":40000000,\"sha256\":\"9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08\",\"imzo\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==\"}}}", BUZUQ_IMZO, "RAD")
+MANIFEST("win: xabar oʻzgargan", "win", "{\"platforma\":\"win\",\"versiya\":\"1.2.1\",\"min_versiya\":\"1.2.0\",\"majburiy_muhlat_soat\":72,\"tarqatish_foiz\":10,\"izoh\":\"Mikrofon ochilishidagi xato tuzatildi.\",\"fayllar\":{\"x64\":{\"url\":\"https://cdn.mirqobilov.com/dl/v1.2.1/Kotib-1.2.1-win-yangilash.exe\",\"hajm\":41234567,\"sha256\":\"9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08\",\"imzo\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==\"},\"arm64\":{\"url\":\"https://cdn.mirqobilov.com/dl/v1.2.1/Kotib-1.2.1-win-yangilash-arm64.exe\",\"hajm\":40000000,\"sha256\":\"9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08\",\"imzo\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==\"}}}", BUZUQ_XABAR, "RAD")
+MANIFEST("win: boshqa kalit", "win", "{\"platforma\":\"win\",\"versiya\":\"1.2.1\",\"min_versiya\":\"1.2.0\",\"majburiy_muhlat_soat\":72,\"tarqatish_foiz\":10,\"izoh\":\"Mikrofon ochilishidagi xato tuzatildi.\",\"fayllar\":{\"x64\":{\"url\":\"https://cdn.mirqobilov.com/dl/v1.2.1/Kotib-1.2.1-win-yangilash.exe\",\"hajm\":41234567,\"sha256\":\"9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08\",\"imzo\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==\"},\"arm64\":{\"url\":\"https://cdn.mirqobilov.com/dl/v1.2.1/Kotib-1.2.1-win-yangilash-arm64.exe\",\"hajm\":40000000,\"sha256\":\"9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08\",\"imzo\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==\"}}}", BOSHQA_KALIT, "RAD")
+MANIFEST("mac: faqat versiya — sukut qiymatlari", "mac", "{\"platforma\":\"mac\",\"versiya\":\"1.2.1\"}", TOGRI, "v=1.2.1;min=;muhlat=72;foiz=100;izoh=")
+MANIFEST("mac: oʻzbekcha izoh", "mac", "{\"platforma\":\"mac\",\"versiya\":\"1.2.1\",\"izoh\":\"Oʻzbekcha — «tirnoq» va gʻ\"}", TOGRI, "v=1.2.1;min=;muhlat=72;foiz=100;izoh=Oʻzbekcha — «tirnoq» va gʻ")
+MANIFEST("mac: fayllar eʼtiborsiz", "mac", "{\"platforma\":\"mac\",\"versiya\":\"1.2.1\",\"fayllar\":{\"x64\":{\"url\":\"http://evil.com/a\"}}}", TOGRI, "v=1.2.1;min=;muhlat=72;foiz=100;izoh=")
+MANIFEST("platforma boshqa", "win", "{\"platforma\":\"mac\",\"versiya\":\"1.2.1\"}", TOGRI, "RAD")
+MANIFEST("platforma yoʻq", "mac", "{\"versiya\":\"1.2.1\"}", TOGRI, "RAD")
+MANIFEST("versiya formati notoʻgʻri", "mac", "{\"platforma\":\"mac\",\"versiya\":\"1.2\"}", TOGRI, "RAD")
+MANIFEST("versiya son", "mac", "{\"platforma\":\"mac\",\"versiya\":1.2}", TOGRI, "RAD")
+MANIFEST("min > versiya", "mac", "{\"platforma\":\"mac\",\"versiya\":\"1.2.0\",\"min_versiya\":\"1.3.0\"}", TOGRI, "RAD")
+MANIFEST("muhlat manfiy", "mac", "{\"platforma\":\"mac\",\"versiya\":\"1.2.1\",\"majburiy_muhlat_soat\":-1}", TOGRI, "RAD")
+MANIFEST("muhlat kasr", "mac", "{\"platforma\":\"mac\",\"versiya\":\"1.2.1\",\"majburiy_muhlat_soat\":72.5}", TOGRI, "RAD")
+MANIFEST("muhlat satr", "mac", "{\"platforma\":\"mac\",\"versiya\":\"1.2.1\",\"majburiy_muhlat_soat\":\"72\"}", TOGRI, "RAD")
+MANIFEST("muhlat mantiqiy", "mac", "{\"platforma\":\"mac\",\"versiya\":\"1.2.1\",\"majburiy_muhlat_soat\":true}", TOGRI, "RAD")
+MANIFEST("muhlat 0", "mac", "{\"platforma\":\"mac\",\"versiya\":\"1.2.1\",\"majburiy_muhlat_soat\":0}", TOGRI, "v=1.2.1;min=;muhlat=0;foiz=100;izoh=")
+MANIFEST("muhlat bir yildan oshiq", "mac", "{\"platforma\":\"mac\",\"versiya\":\"1.2.1\",\"majburiy_muhlat_soat\":8761}", TOGRI, "RAD")
+MANIFEST("foiz 101", "mac", "{\"platforma\":\"mac\",\"versiya\":\"1.2.1\",\"tarqatish_foiz\":101}", TOGRI, "RAD")
+MANIFEST("izoh son", "mac", "{\"platforma\":\"mac\",\"versiya\":\"1.2.1\",\"izoh\":5}", TOGRI, "RAD")
+MANIFEST("win: fayllar yoʻq", "win", "{\"platforma\":\"win\",\"versiya\":\"1.2.1\",\"min_versiya\":\"1.2.0\",\"majburiy_muhlat_soat\":72,\"tarqatish_foiz\":10,\"izoh\":\"Mikrofon ochilishidagi xato tuzatildi.\"}", TOGRI, "RAD")
+MANIFEST("win: fayllar boʻsh", "win", "{\"platforma\":\"win\",\"versiya\":\"1.2.1\",\"min_versiya\":\"1.2.0\",\"majburiy_muhlat_soat\":72,\"tarqatish_foiz\":10,\"izoh\":\"Mikrofon ochilishidagi xato tuzatildi.\",\"fayllar\":{}}", TOGRI, "RAD")
+MANIFEST("win: begona URL", "win", "{\"platforma\":\"win\",\"versiya\":\"1.2.1\",\"min_versiya\":\"1.2.0\",\"majburiy_muhlat_soat\":72,\"tarqatish_foiz\":10,\"izoh\":\"Mikrofon ochilishidagi xato tuzatildi.\",\"fayllar\":{\"x64\":{\"url\":\"https://evil.com/a.exe\",\"hajm\":41234567,\"sha256\":\"9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08\",\"imzo\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==\"}}}", TOGRI, "RAD")
+MANIFEST("win: sha256 katta harf", "win", "{\"platforma\":\"win\",\"versiya\":\"1.2.1\",\"min_versiya\":\"1.2.0\",\"majburiy_muhlat_soat\":72,\"tarqatish_foiz\":10,\"izoh\":\"Mikrofon ochilishidagi xato tuzatildi.\",\"fayllar\":{\"x64\":{\"url\":\"https://cdn.mirqobilov.com/dl/v1.2.1/Kotib-1.2.1-win-yangilash.exe\",\"hajm\":41234567,\"sha256\":\"9F86D081884C7D659A2FEAA0C55AD015A3BF4F1B2B0B822CD15D6C15B0F00A08\",\"imzo\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==\"}}}", TOGRI, "RAD")
+MANIFEST("win: sha256 qisqa", "win", "{\"platforma\":\"win\",\"versiya\":\"1.2.1\",\"min_versiya\":\"1.2.0\",\"majburiy_muhlat_soat\":72,\"tarqatish_foiz\":10,\"izoh\":\"Mikrofon ochilishidagi xato tuzatildi.\",\"fayllar\":{\"x64\":{\"url\":\"https://cdn.mirqobilov.com/dl/v1.2.1/Kotib-1.2.1-win-yangilash.exe\",\"hajm\":41234567,\"sha256\":\"9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a0\",\"imzo\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==\"}}}", TOGRI, "RAD")
+MANIFEST("win: fayl imzosi 63 bayt", "win", "{\"platforma\":\"win\",\"versiya\":\"1.2.1\",\"min_versiya\":\"1.2.0\",\"majburiy_muhlat_soat\":72,\"tarqatish_foiz\":10,\"izoh\":\"Mikrofon ochilishidagi xato tuzatildi.\",\"fayllar\":{\"x64\":{\"url\":\"https://cdn.mirqobilov.com/dl/v1.2.1/Kotib-1.2.1-win-yangilash.exe\",\"hajm\":41234567,\"sha256\":\"9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08\",\"imzo\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\"}}}", TOGRI, "RAD")
+MANIFEST("win: hajm 0", "win", "{\"platforma\":\"win\",\"versiya\":\"1.2.1\",\"min_versiya\":\"1.2.0\",\"majburiy_muhlat_soat\":72,\"tarqatish_foiz\":10,\"izoh\":\"Mikrofon ochilishidagi xato tuzatildi.\",\"fayllar\":{\"x64\":{\"url\":\"https://cdn.mirqobilov.com/dl/v1.2.1/Kotib-1.2.1-win-yangilash.exe\",\"hajm\":0,\"sha256\":\"9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08\",\"imzo\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==\"}}}", TOGRI, "RAD")
+MANIFEST("win: nomaʼlum arxitektura", "win", "{\"platforma\":\"win\",\"versiya\":\"1.2.1\",\"min_versiya\":\"1.2.0\",\"majburiy_muhlat_soat\":72,\"tarqatish_foiz\":10,\"izoh\":\"Mikrofon ochilishidagi xato tuzatildi.\",\"fayllar\":{\"x86\":{\"url\":\"https://cdn.mirqobilov.com/dl/v1.2.1/Kotib-1.2.1-win-yangilash.exe\",\"hajm\":41234567,\"sha256\":\"9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08\",\"imzo\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==\"}}}", TOGRI, "RAD")
+MANIFEST("win: bitta arxitektura", "win", "{\"platforma\":\"win\",\"versiya\":\"1.2.1\",\"min_versiya\":\"1.2.0\",\"majburiy_muhlat_soat\":72,\"tarqatish_foiz\":10,\"izoh\":\"Mikrofon ochilishidagi xato tuzatildi.\",\"fayllar\":{\"x64\":{\"url\":\"https://cdn.mirqobilov.com/dl/v1.2.1/Kotib-1.2.1-win-yangilash.exe\",\"hajm\":41234567,\"sha256\":\"9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08\",\"imzo\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==\"}}}", TOGRI, "v=1.2.1;min=1.2.0;muhlat=72;foiz=10;izoh=Mikrofon ochilishidagi xato tuzatildi.;x64=https://cdn.mirqobilov.com/dl/v1.2.1/Kotib-1.2.1-win-yangilash.exe|41234567|9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08|imzo64")
+MANIFEST("JSON emas", "mac", "salom", TOGRI, "RAD")
+MANIFEST("roʻyxat, obyekt emas", "mac", "[\"mac\",\"1.2.1\"]", TOGRI, "RAD")
+
+// JAVOB_XOM(nom, javob, kutilgan) — server javobining oʻzi buzilgan holatlar
+// (imzolanmaydi; hammasi rad etilishi kerak). Kalit — RFC 8032 TEST 1.
+JAVOB_XOM("boʻsh", "", "RAD")
+JAVOB_XOM("boʻsh obyekt", "{}", "RAD")
+JAVOB_XOM("m yoʻq", "{\"s\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==\"}", "RAD")
+JAVOB_XOM("s yoʻq", "{\"m\":\"e30=\"}", "RAD")
+JAVOB_XOM("m base64 emas", "{\"m\":\"!!\",\"s\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==\"}", "RAD")
+JAVOB_XOM("s qisqa", "{\"m\":\"e30=\",\"s\":\"YQ==\"}", "RAD")
+JAVOB_XOM("JSON emas", "salom", "RAD")
+JAVOB_XOM("m son", "{\"m\":5,\"s\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==\"}", "RAD")
+
+// ---------------------------------------------------------------- jadval
+// Spec «Tekshiruv jadvali», «Oʻrnatish oqimi». Vaqtlar — unix soniya, -1 —
+// «hech qachon» (macOS'dagi `nil`).
+//
+// QAYTA(urinish, kutilgan_soniya) — qaytaUrinishKechikishi; -1: urinishlar
+// tugadi, odatdagi 24 soatlik jadvalga qaytiladi.
+QAYTA(0, 900)
+QAYTA(1, 3600)
+QAYTA(2, 14400)
+QAYTA(3, -1)
+QAYTA(10, -1)
+QAYTA(-1, -1)
+
+// UYGONISH(nom, oxirgi_muvaffaqiyat, hozir, kutilgan) — tekshirish vaqti keldimi.
+UYGONISH("hech qachon boʻlmagan", -1, 1791000000, true)
+UYGONISH("1 soat oldin", 1790996400, 1791000000, false)
+UYGONISH("23 soat 59 daqiqa", 1790913660, 1791000000, false)
+UYGONISH("aniq 24 soat", 1790913600, 1791000000, true)
+UYGONISH("bir hafta", 1790395200, 1791000000, true)
+UYGONISH("kelajakda — soat orqaga surilgan", 1791003600, 1791000000, true)
+
+// BOSH_PAYT(nom, band, oxirgi_faollik, kutish_boshlandi, hozir, kutilgan) —
+// tayyor yangilanish hozir oʻrnatilsinmi.
+BOSH_PAYT("yozuv yoki fayl ishi", true, 1790996400, 1790996400, 1791000000, false)
+BOSH_PAYT("diktovkadan 1 daqiqa", false, 1790999940, 1790996400, 1791000000, false)
+BOSH_PAYT("diktovkadan 119 s", false, 1790999881, 1790996400, 1791000000, false)
+BOSH_PAYT("diktovkadan 2 daqiqa", false, 1790999880, 1790996400, 1791000000, true)
+BOSH_PAYT("hech diktovka yoʻq", false, -1, 1791000000, 1791000000, true)
+BOSH_PAYT("hech diktovka yoʻq, lekin band", true, -1, 1791000000, 1791000000, false)
+BOSH_PAYT("24 soat kutgan, 1 daqiqa tinch", false, 1790999940, 1790913600, 1791000000, true)
+BOSH_PAYT("24 soat kutgan, 59 s", false, 1790999941, 1790913600, 1791000000, false)
+BOSH_PAYT("23 soat kutgan, 1 daqiqa tinch", false, 1790999940, 1790917200, 1791000000, false)
+BOSH_PAYT("48 soat kutgan, lekin band", true, 1790996400, 1790827200, 1791000000, false)
+
+// IZOH(nom, xom, kutilgan) — reliz izohi → banner qatori (qisqaIzoh).
+// Belgi — Unicode skalyari (grafema emas), chegara 140.
+IZOH("boʻsh", "", "")
+IZOH("oddiy matn", "Mikrofon xatosi tuzatildi.", "Mikrofon xatosi tuzatildi.")
+IZOH("markdown", "### Tuzatildi\n- **Mikrofon** xatosi.\n- Clipboard tiklanadi.\n", "Mikrofon xatosi.; Clipboard tiklanadi.")
+IZOH("yulduzcha roʻyxat", "* Bir\n* Ikki", "Bir; Ikki")
+IZOH("chiziqcha boʻshliqsiz", "-Bir", "-Bir")
+IZOH("faqat chiziqcha", "- ", "-")
+IZOH("chiziqcha va tab", "-\tBir", "- Bir")
+IZOH("uch yulduz", "***muhim***", "*muhim*")
+IZOH("faqat qalin", "**", "")
+IZOH("html", "<h2>Yangi</h2><ul><li>Bir</li><li>Ikki</li></ul>", "Bir; Ikki")
+IZOH("html sarlavha katta harf va atribut", "<H3 class=\"x\">Sarlavha</H3>Matn", "Matn")
+IZOH("html sarlavha boshqa raqam bilan yopilgan", "<h2>A</h4>B", "B")
+IZOH("html sarlavha yopilmagan", "<h2>ochiq sarlavha", "ochiq sarlavha")
+IZOH("html sarlavha bir necha qatorda", "<h2>Bir\nIkki</h2>Uch", "Uch")
+IZOH("teg emas: <>", "a <> b", "a <> b")
+IZOH("ikki burchak orasi", "a < b va c > d", "a; d")
+IZOH("hashtag qatori tashlanadi", "#sarlavha\nMatn", "Matn")
+IZOH("ichidagi # qoladi", "Versiya #2", "Versiya #2")
+IZOH("boʻshliqlar va tab", "  ikki   boʻshliq\t tab  ", "ikki boʻshliq tab")
+IZOH("CRLF", "Bir\r\nIkki", "Bir; Ikki")
+IZOH("boʻsh qatorlar", "\n\n  \nBir\n\n", "Bir")
+IZOH("NBSP", "a\u00A0\u00A0b", "a b")
+IZOH("qator ajratgich U+2028", "Bir\u2028Ikki", "Bir; Ikki")
+IZOH("oʻzbekcha harflar", "Oʻzbekcha — «tirnoq» va gʻ", "Oʻzbekcha — «tirnoq» va gʻ")
+IZOH("140 belgi — oʻzgarmaydi", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+IZOH("141 belgi — 139 + …", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa…")
+IZOH("koʻp baytli belgilar skalyar sifatida", "ʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻ", "ʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻʻ…")
+
+// MAJBURIY(nom, joriy, min, muhlat_soat, korilgan, hozir, kutilgan) — diskda
+// saqlangan majburiy talabdan qaror (ilova qayta ochilganda, internetsiz).
+MAJBURIY("talab yoʻq", "1.2.0", "", 72, -1, 1791000000, HECH)
+MAJBURIY("joriy = min", "1.2.0", "1.2.0", 72, 1790999000, 1791000000, HECH)
+MAJBURIY("joriy yangiroq", "1.2.1", "1.2.0", 72, 1790000000, 1791000000, HECH)
+MAJBURIY("muhlat ichida", "1.1.0", "1.2.0", 72, 1790996400, 1791000000, ORNAT)
+MAJBURIY("muhlat tugashiga 1 s", "1.1.0", "1.2.0", 72, 1790740801, 1791000000, ORNAT)
+MAJBURIY("muhlat tugagan", "1.1.0", "1.2.0", 72, 1790740800, 1791000000, BLOKLA)
+MAJBURIY("muhlat 0 — darhol blok", "1.1.0", "1.2.0", 0, 1791000000, 1791000000, BLOKLA)
+MAJBURIY("soat orqaga surilgan — bloklanmaydi", "1.1.0", "1.2.0", 72, 1791003600, 1791000000, ORNAT)
+MAJBURIY("qoʻshimchali versiya", "1.2.0-sinov1", "1.2.0", 72, 1790996400, 1791000000, ORNAT)
+MAJBURIY("koʻrilgan vaqt yoʻq — ehtiyot", "1.1.0", "1.2.0", 72, -1, 1791000000, ORNAT)

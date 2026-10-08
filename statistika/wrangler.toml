@@ -1,0 +1,54 @@
+# Kotib statistika Worker'i.
+#
+# Joylashtirish:
+#   wrangler d1 create kotib-statistika          (bir marta, id ni pastga yozing)
+#   wrangler d1 execute kotib-statistika --remote --file=schema.sql
+#   wrangler kv namespace create VERSIYALAR      (bir marta, id ni pastga yozing)
+#   wrangler deploy
+#
+# Versiya maʼlumotini yangilash (yangi reliz chiqqanda):
+#   wrangler kv key put --namespace-id=<id> joriy --path=versiya.json --remote
+
+name = "kotib-statistika"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+
+# Ilova aynan shu manzilga murojaat qiladi (`yangilanish.swift` va
+# `yangilanish.cpp` dagi `kHost`). workers.dev manzili ham ishlaydi, lekin
+# ilovaga qatʼiy manzil kerak — u versiyalar boʻyicha oʻzgarmasligi shart.
+[[routes]]
+pattern = "stat.mirqobilov.com"
+custom_domain = true
+
+# Statistika soʻrovlari kam va kichik — bepul chegara ichida turadi.
+[observability]
+enabled = true
+
+# `amallar` jadvalini tozalash — har kuni 03:00 UTC da 60 kundan eski
+# yozuvlarni oʻchiradi (index.js dagi `scheduled`).
+[triggers]
+crons = ["0 3 * * *"]
+
+# Soʻrov cheklovi (barqarorlik spec'i, H2): bitta IP'dan /v1/ping va /v1/amal
+# ga daqiqasiga 60 tagacha. Haqiqiy ilova kuniga bitta ping va har
+# transkripsiyada bitta amal yuboradi — bu chegara faqat soxta oqimni toʻxtatadi.
+# namespace_id — hisob ichida noyob ixtiyoriy raqam.
+[[ratelimits]]
+name = "CHEKLOV"
+namespace_id = "1001"
+simple = { limit = 60, period = 60 }
+
+# IP_TUZ — sir. IP hashlash uchun tuz (xom IP saqlanmaydi, faqat kesilgan
+# IP'ning tuzli hashi). Bir marta oʻrnating, keyin oʻzgartirmang (aks holda
+# eski `ip_hash` lar yangilariga mos kelmaydi):
+#   wrangler secret put IP_TUZ
+# PANEL_KALIT ham xuddi shunday sir sifatida beriladi.
+
+[[d1_databases]]
+binding = "DB"
+database_name = "kotib-statistika"
+database_id = "1193dcec-0b30-4c60-a28a-e0a42bd85356"
+
+[[kv_namespaces]]
+binding = "VERSIYALAR"
+id = "8570442129a44d89ab486d90b4c471fd"

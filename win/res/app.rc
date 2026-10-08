@@ -1,0 +1,49 @@
+#include <windows.h>
+// Versiya makrolari — CMake `VERSION` faylidan yaratadi (res/kotib_versiya.h.in).
+// Raqamni bu yerga qoʻlda yozmang: scripts/versiya-tekshir.sh buni ushlaydi.
+#include "kotib_versiya.h"
+
+// Ikonka. Birinchi (eng kichik ID) ikonka Explorer'da fayl ikonkasi
+// sifatida ishlatiladi.
+#define IDI_APPICON 101
+IDI_APPICON ICON "AppIcon.ico"
+
+// Zamonaviy boshqaruv elementlari (tugmalar, ro'yxatlar) uchun manifest.
+// Busiz oyna Windows 95 uslubida ko'rinadi.
+1 RT_MANIFEST "app.manifest"
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION     KOTIB_VER_RAQAMLI
+PRODUCTVERSION  KOTIB_VER_RAQAMLI
+FILEFLAGSMASK   0x3fL
+FILEFLAGS       0x0L
+FILEOS          VOS_NT_WINDOWS32
+FILETYPE        VFT_APP
+FILESUBTYPE     VFT2_UNKNOWN
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        // 0409 = ingliz (AQSh), 04B0 = Unicode. Windows Explorer shu
+        // kombinatsiyani standart sifatida kutadi.
+        BLOCK "040904B0"
+        BEGIN
+            VALUE "CompanyName",      "Muhammad Mirkabilov"
+            // FileDescription — Windows'ning bildirishnomalarida ILOVA
+            // NOMI sifatida chiqadi (Shell_NotifyIcon → toast) va Vazifalar
+            // dispetcherida ham shu koʻrinadi. Shuning uchun bu yerda tavsif
+            // emas, aynan nom turishi kerak: ilgari «Oʻzbekcha ovozli yozuv»
+            // edi va bildirishnoma eski nom bilan chiqardi.
+            VALUE "FileDescription",  "Kotib"
+            VALUE "FileVersion",      KOTIB_VER_FAYL_STR
+            VALUE "InternalName",     "Kotib"
+            VALUE "LegalCopyright",   "MIT litsenziyasi"
+            VALUE "OriginalFilename", "Kotib.exe"
+            VALUE "ProductName",      "Kotib"
+            VALUE "ProductVersion",   KOTIB_VER_STR
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END

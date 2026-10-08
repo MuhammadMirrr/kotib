@@ -1,0 +1,26 @@
+# Loyiha macOS va Windows'da parallel ishlab chiqiladi. Satr oxirlarini
+# git o'zi normallashtiradi: repozitoriyda LF, ish nusxasida platformaga mos.
+# Busiz har bir commit'da butun fayllar "o'zgargan" bo'lib ko'rinadi.
+* text=auto eol=lf
+
+# Windows vositalar aynan CRLF talab qiladi
+*.iss       text eol=crlf
+*.rc        text eol=crlf
+*.manifest  text eol=crlf
+
+# PowerShell skriptlari UTF-8 BOM bilan saqlanadi (Windows PowerShell 5.1
+# BOM bo'lmasa faylni tizim kod sahifasida o'qiydi va o'zbekcha matnni buzadi).
+# Git ularni matn sifatida ko'rsin, lekin BOM'ga tegmasin.
+*.ps1       text eol=crlf
+
+# Ikkilik fayllar
+*.png       binary
+*.ico       binary
+*.icns      binary
+*.bin       binary
+*.dmg       binary
+*.exe       binary
+# Windows batch skriptlari CRLF bilan qolsin: faqat LF boʻlgan `.cmd` ni
+# cmd.exe satr oʻrtasidan kesib yuboradi (`jfk.wav` → `k.wav`).
+*.cmd  text eol=crlf
+*.bat  text eol=crlf

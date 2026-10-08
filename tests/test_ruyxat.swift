@@ -1,0 +1,20 @@
+// Har bir yangi test fayli oʻz registratsiya funksiyasini shu yerga qoʻshadi.
+func barchaTestlarniRoyxatgaQosh() {
+    textFormatTestlari()
+    audioUtilTestlari()
+    llmTestlari()
+    modelRoyxatiTestlari()
+    soravTanasiTestlari()
+    diktovkaTarixiTestlari()
+    yollarTestlari()
+    vaqtFormatTestlari()
+    vaqtFormatFaylTestlari()
+    matnBoluvchiTestlari()
+    tillarTestlari()
+    tarjimaModelTestlari()
+    yangilanishTestlari()
+    modelTanlovTestlari()
+    modelSha256Testlari()
+    logSiyosatiTestlari()
+    saqlanmaganTestlari()
+}

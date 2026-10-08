@@ -1,0 +1,98 @@
+# Tekshiruvlar — macOS runner'da (Windows qismi ham macOS'da kross-sinanadi).
+#
+# Hozir faqat PR va qoʻlda ishga tushirish: repo private, private repolarda
+# macOS daqiqalari pullik (10× koeffitsient). Ochiq `kotib` repoda (S24)
+# `push: branches: [main]` qoʻshiladi — u yerda Actions bepul.
+name: CI
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tekshiruv:
+    name: Testlar va formatlash
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Swift testlari (sof mantiq, versiya)
+        run: ./src/test.sh
+
+      - name: Windows testlari (macOS'da)
+        run: ./win/tests/mac/sinov.sh
+
+      - name: whisper parametrlari — ikki platforma bir xil
+        run: ./win/tests/mac/parametr-tekshir.sh
+
+      - name: Matn boʻluvchi va formatlash — korpus diff
+        run: ./win/tests/mac/taqqoslash/taqqosla.sh
+
+      - name: shellcheck
+        run: |
+          brew install shellcheck
+          git ls-files '*.sh' | xargs shellcheck
+
+      # clang-format versiyasi pinlangan (llvm-mingw) — boshqa versiya boshqacha
+      # formatlaydi va tekshiruv bekorga yiqilardi.
+      - name: llvm-mingw versiyasi
+        id: llvm
+        run: echo "versiya=$(grep '^LLVM_MINGW_VERSIYA=' scripts/bogliqliklar.env | cut -d= -f2)" >> "$GITHUB_OUTPUT"
+
+      - name: llvm-mingw kesh
+        id: llvm-kesh
+        uses: actions/cache@v4
+        with:
+          path: ~/llvm-mingw
+          key: llvm-mingw-${{ steps.llvm.outputs.versiya }}
+
+      - name: llvm-mingw yuklash
+        if: steps.llvm-kesh.outputs.cache-hit != 'true'
+        run: |
+          V='${{ steps.llvm.outputs.versiya }}'
+          curl -fsSL -o /tmp/llvm-mingw.tar.xz \
+            "https://github.com/mstorsjo/llvm-mingw/releases/download/$V/llvm-mingw-$V-ucrt-macos-universal.tar.xz"
+          mkdir -p ~/llvm-mingw
+          tar -xf /tmp/llvm-mingw.tar.xz -C ~/llvm-mingw --strip-components 1
+
+      - name: Formatlash (Swift va C/C++)
+        run: CLANG_FORMAT=~/llvm-mingw/bin/clang-format ./scripts/formatla.sh --tekshir
+
+  yigish:
+    name: macOS ilovasi (arm64, imzosiz)
+    runs-on: macos-15
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      # whisper.cpp, CTranslate2 va SentencePiece pinlangan commit'larda —
+      # kalit ularning pin'i: pin oʻzgarmasa, ~30 daqiqalik yigʻish takrorlanmaydi.
+      - name: Bogʻliqliklar kesh
+        uses: actions/cache@v4
+        with:
+          path: |
+            whisper.cpp
+            ctranslate2
+            sentencepiece
+          key: bogliqliklar-arm64-${{ hashFiles('scripts/bogliqliklar.env', 'scripts/bogliqliklar.sh') }}
+
+      - name: Kutubxonalar (faqat arm64, modelsiz)
+        run: FAQAT_KUTUBXONALAR=1 UNIVERSAL=0 ./setup.sh
+
+      # Developer ID yoʻq — build.sh ad-hoc imzoga oʻtadi (begona hissa
+      # qoʻshuvchi ham xuddi shunday yigʻadi).
+      - name: Ilova
+        run: APP_OUT="$RUNNER_TEMP/Kotib.app" ./src/build.sh
+
+      - name: Natija tekshiruvi
+        run: |
+          APP="$RUNNER_TEMP/Kotib.app"
+          lipo -archs "$APP/Contents/MacOS/Kotib"
+          test -s "$APP/Contents/Resources/Litsenziyalar.txt"
+          test ! -e "$APP/Contents/Resources/ggml-rubaistt.bin"
+          codesign --verify --verbose=2 "$APP"

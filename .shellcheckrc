@@ -1,0 +1,5 @@
+# shellcheck sozlamasi (repo ildizi — hamma skriptlarga).
+#
+# SC1091: skriptlar umumiy fayllarni oʻzgaruvchili yoʻl bilan oʻqiydi
+# (`source "$ROOT/scripts/versiya.sh"`) — shellcheck ularni topa olmaydi.
+disable=SC1091

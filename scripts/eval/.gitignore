@@ -1,0 +1,6 @@
+.venv
+.venv/
+flores200_dataset
+flores200_dataset/
+flores.tar.gz
+*.out.txt

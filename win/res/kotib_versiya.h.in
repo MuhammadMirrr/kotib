@@ -1,0 +1,20 @@
+// CMake yaratadi (`configure_file`) — QOʻLDA TAHRIRLAMANG.
+// Manba: repo ildizidagi `VERSION`. app.rc shu makrolarni ishlatadi.
+//
+// Raqamli versiya (FILEVERSION, VS_FIXEDFILEINFO) faqat uchta raqamni
+// oladi; `-sinov1` kabi qoʻshimcha faqat matnli ProductVersion da va
+// `KOTIB_VER_STR` da. Yangilovchi va statistika `KOTIB_VER_STR` ni oladi:
+// raqamli versiya bilan `1.2.0-sinov1` → `1.2.0-sinov2` yangilanishi
+// hech qachon taklif qilinmasdi (`1.2.0` > `1.2.0-sinov2`).
+#ifndef KOTIB_VERSIYA_H
+#define KOTIB_VERSIYA_H
+
+#define KOTIB_VER_RAQAMLI   @KOTIB_VER_KATTA@,@KOTIB_VER_KICHIK@,@KOTIB_VER_TUZATISH@,0
+#define KOTIB_VER_FAYL_STR  "@KOTIB_VER_KATTA@.@KOTIB_VER_KICHIK@.@KOTIB_VER_TUZATISH@.0"
+#define KOTIB_VER_STR       "@KOTIB_VERSIYA@"
+
+// Yangilanish imzosining ochiq kaliti (Ed25519, base64) — manba:
+// `scripts/yangilanish-kaliti.pub`. Ochiq kalit maxfiy emas.
+#define KOTIB_YANGILANISH_KALITI "@KOTIB_YANGILANISH_KALITI@"
+
+#endif

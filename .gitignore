@@ -1,0 +1,59 @@
+# Build artifacts (macOS)
+src/*.o
+src/Kotib
+src/AudioMatnga
+src/RubaiSTTDictation
+whisper.cpp/
+ctranslate2/
+sentencepiece/
+# Sparkle relizi (scripts/bogliqliklar.sh → sparkle_tayyorla)
+sparkle/
+.venv/
+.assets/
+
+# Build artifacts (Windows)
+# AppIcon.ico ni build.ps1 assets/icon_1024.png dan yasaydi.
+# (.gitignore satr ichidagi izohni qo'llab-quvvatlamaydi — izoh alohida satrda.)
+win/res/AppIcon.ico
+win/build/
+win/build-x64/
+win/build-arm64/
+win/out/
+*.obj
+*.pdb
+*.ilk
+
+# Model (1.5GB — release orqali yoki konversiya bilan olinadi)
+*.bin
+models/
+
+# Release artefaktlari (make_pkg.sh yasaydi)
+dist/
+
+# macOS
+.DS_Store
+
+# Mahalliy eslatma
+NEXT_SESSION.md
+
+# Cloudflare Wrangler keshi (hisob ID va loyiha nomi — repoda kerak emas)
+.wrangler/
+
+# Offline .pkg uchun model nusxasi (repoda kerak emas)
+.model-cache/
+tests/.build/
+
+# Python keshi (win/tools, scripts/eval)
+__pycache__/
+*.pyc
+
+# Wrangler mahalliy sirlari
+.dev.vars*
+
+# Worker testlari (statistika/: npm install)
+node_modules/
+
+# Nutq modeli oʻlchovlari (scripts/stt-baho): modellar, natijalar, binarlar
+.stt-baho/
+# Silero VAD modeli (S12) — build pinlangan manbadan yuklaydi (scripts/bogliqliklar.env)
+vad/
