@@ -3,7 +3,7 @@
 Format — [Keep a Changelog](https://keepachangelog.com/), versiyalar —
 [SemVer](https://semver.org/). Versiya bitta joyda: [`VERSION`](VERSION).
 
-## [Keyingi]
+## [1.2.1] — 2026-10-08
 
 ### Tuzatildi
 - macOS: yozuv paytida model fayli yoʻqolsa, toʻxtatish tugmasi ishlamasdi —

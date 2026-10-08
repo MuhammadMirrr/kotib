@@ -20,7 +20,7 @@ Tenglashtirish ishlarining holati: [../docs/windows/WINDOWS-PARITET.md](../docs/
 
 ## Oʻrnatish
 
-**[Kotib-1.2.0-win-setup.exe](https://cdn.mirqobilov.com/dl/win/Kotib-1.2.0-win-setup.exe)** — 845 MB, yagona fayl.
+**[Kotib-1.2.1-win-setup.exe](https://cdn.mirqobilov.com/dl/win/Kotib-1.2.1-win-setup.exe)** — 845 MB, yagona fayl.
 
 Ichida hammasi bor: ilova, nutq modeli va **ikkala protsessor turi uchun**
 binarlar (Intel/AMD va ARM). Oʻrnatuvchi qaysi biri kerakligini oʻzi

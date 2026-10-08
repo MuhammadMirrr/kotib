@@ -6,8 +6,8 @@ Istalgan ilovada (Telegram, brauzer, hujjat — qayerda kursor boʻlsa) tugmani 
 
 | Platforma | Tugma | Yuklab olish | Texnik hujjat |
 |---|---|---|---|
-| **macOS** 13+ | ⌃⌥D | [.pkg (789 MB)](https://cdn.mirqobilov.com/dl/mac/Kotib-1.2.0-mac.pkg) | shu hujjat |
-| **Windows** 10/11 | Ctrl+Alt+D | [.exe (845 MB)](https://cdn.mirqobilov.com/dl/win/Kotib-1.2.0-win-setup.exe) | [win/README.md](win/README.md) |
+| **macOS** 13+ | ⌃⌥D | [.pkg (789 MB)](https://cdn.mirqobilov.com/dl/mac/Kotib-1.2.1-mac.pkg) | shu hujjat |
+| **Windows** 10/11 | Ctrl+Alt+D | [.exe (845 MB)](https://cdn.mirqobilov.com/dl/win/Kotib-1.2.1-win-setup.exe) | [win/README.md](win/README.md) |
 
 Ikkala versiya bir xil modeldan (`rubaiSTT v2 medium`) va bir xil inference parametrlaridan
 foydalanadi — natijalar bir xil boʻladi. Tizimning oʻrnatilgan diktovkasi kabi, lekin
@@ -70,8 +70,8 @@ xatolar: [docs/windows/WINDOWS-PORT-PLAN.md](docs/windows/WINDOWS-PORT-PLAN.md)
 
 ### A) Tayyor ilova (oson)
 
-**[⬇️ macOS uchun — Kotib-1.2.0-mac.pkg (789 MB)](https://cdn.mirqobilov.com/dl/mac/Kotib-1.2.0-mac.pkg)**
-· **[⬇️ Windows uchun — Kotib-1.2.0-win-setup.exe (845 MB)](https://cdn.mirqobilov.com/dl/win/Kotib-1.2.0-win-setup.exe)**
+**[⬇️ macOS uchun — Kotib-1.2.1-mac.pkg (789 MB)](https://cdn.mirqobilov.com/dl/mac/Kotib-1.2.1-mac.pkg)**
+· **[⬇️ Windows uchun — Kotib-1.2.1-win-setup.exe (845 MB)](https://cdn.mirqobilov.com/dl/win/Kotib-1.2.1-win-setup.exe)**
 
 Dastur va oʻzbek tili modeli bitta faylda keladi. Internet faqat yuklab olish
 uchun kerak — oʻrnatgandan keyin butunlay internetsiz ishlaydi. Windows fayli
