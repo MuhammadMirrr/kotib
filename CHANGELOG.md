@@ -3,6 +3,15 @@
 Format — [Keep a Changelog](https://keepachangelog.com/), versiyalar —
 [SemVer](https://semver.org/). Versiya bitta joyda: [`VERSION`](VERSION).
 
+## [Keyingi]
+
+### Tuzatildi
+- macOS: yozuv paytida model fayli yoʻqolsa, toʻxtatish tugmasi ishlamasdi —
+  mikrofon yozishda qolardi va ovoz saqlanmasdi. Endi yozuv toʻxtaydi va ovoz
+  saqlanadi (keyin oʻzi matnga oʻgiriladi).
+- macOS: «Bosing va gapiring» kartasi va «Qoʻshimcha sozlamalar» VoiceOver'da
+  tugma sifatida koʻrinadi va bosiladi.
+
 ## [1.2.0] — 2026-10-08
 
 ### Qoʻshildi

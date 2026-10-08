@@ -148,6 +148,15 @@ final class BosiladiganYozuv: NSTextField {
 
     override func mouseDown(with event: NSEvent) { onBos?() }
 
+    // Accessibility'da TUGMA: aks holda VoiceOver uni oddiy matn deb oʻqiydi va
+    // «Qoʻshimcha sozlamalar» kabi havolani bosib boʻlmasdi (S23 sinovida topildi).
+    override func accessibilityRole() -> NSAccessibility.Role? { .button }
+    override func accessibilityLabel() -> String? { stringValue }
+    override func accessibilityPerformPress() -> Bool {
+        onBos?()
+        return true
+    }
+
     override func resetCursorRects() {
         addCursorRect(bounds, cursor: .pointingHand)
     }

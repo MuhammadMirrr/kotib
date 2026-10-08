@@ -223,6 +223,17 @@ final class YozishKartasi: NSView {
 
     override func mouseDown(with event: NSEvent) { onBos?() }
 
+    // Accessibility'da butun karta — bitta TUGMA (nomi — sarlavha: «Bosing va
+    // gapiring» / «Eshityapman… gapiring»). Ilgari faqat ichidagi matnlar
+    // koʻrinardi va VoiceOver bilan diktovkani boshlab boʻlmasdi (S23).
+    override func isAccessibilityElement() -> Bool { true }
+    override func accessibilityRole() -> NSAccessibility.Role? { .button }
+    override func accessibilityLabel() -> String? { sarlavha.stringValue }
+    override func accessibilityPerformPress() -> Bool {
+        onBos?()
+        return true
+    }
+
     override func updateTrackingAreas() {
         super.updateTrackingAreas()
         trackingAreas.forEach(removeTrackingArea)

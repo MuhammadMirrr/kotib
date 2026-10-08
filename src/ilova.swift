@@ -318,11 +318,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
         RubaiLog.write("toggle fired, isRecording=\(rec.isRecording)")
-        // Model hali yuklanmagan boʻlsa — xato bermay, yuklash oynasini koʻrsatamiz
-        guard ModelStore.isReady else { modelDownload.show(); return }
         if rec.isRecording {
+            // Toʻxtatish HAR DOIM mumkin. Model tekshiruvi ilgari shu yerdan oldin
+            // turardi: yozuv paytida model fayli yoʻqolsa, toʻxtatish bosilganda
+            // mikrofon yopilmas, ovoz saqlanmas va model qayta yuklanib ketardi
+            // (S23 macOS sinovi). Endi model yoʻq boʻlsa transkripsiya xato beradi
+            // va `ovozniSaqla` ovozni WAV qilib qoldiradi (A2) — Windows bilan bir xil.
             yozishniToxtat()
         } else {
+            // Model yoʻq boʻlsa yozuv BOSHLANMAYDI — yuklash oynasi ochiladi (A4).
+            guard ModelStore.isReady else { modelDownload.show(); return }
             yozishniBoshla()
         }
     }
